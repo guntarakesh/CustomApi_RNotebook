@@ -11,6 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 connectToMongo();
 
 // available routes 
+app.get('/',(req,res)=>{
+    res.send('Hello Rakesh')
+})
 app.use('/api/auth',require('./routes/auth'))
 app.use('/api/notes',require('./routes/notes'))
 
