@@ -60,8 +60,14 @@ router.post('/login',[
     body('email',"Enter a Valid Email").isEmail(),
     body('password',"password not found").exists(),
 ],async (req,res)=>{
-
-    await cors(req,res);
+   
+    if (req.method === 'OPTIONS') {
+        // Handle preflight request
+        await cors(req, res);
+        res.end();
+        return;
+      }
+      
     let success = false ; 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
