@@ -1,3 +1,4 @@
+const cors = require('cors')({ origin: true });
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -13,6 +14,7 @@ router.post('/createuser',[
     body('email', 'enter a valid mail').isEmail(),
     body('password', 'password must be min 5 characters').isLength({ min: 5 }),
 ], async (req, res) => {
+
     let success = false ; 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -58,6 +60,8 @@ router.post('/login',[
     body('email',"Enter a Valid Email").isEmail(),
     body('password',"password not found").exists(),
 ],async (req,res)=>{
+
+    await cors(req,res);
     let success = false ; 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -82,8 +86,14 @@ router.post('/login',[
             }
         }
         const authToken = jwt.sign(data,JWT_SECRET);
+
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
         success = true ; 
         res.json({success,authToken})
+
     }
     catch(error){
       console.error(error.message)
